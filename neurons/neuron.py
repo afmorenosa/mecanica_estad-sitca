@@ -14,7 +14,7 @@ class neuron:
 
     def activate(self):
         """Activation of a neuron."""
-        self.S = np.sign(np.dot(self.X, self.W))
+        self.S = f(np.dot(self.X, self.W))
 
     def set_inputs(self, X):
         """Set the neuron inputs."""
