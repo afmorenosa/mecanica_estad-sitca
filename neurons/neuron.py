@@ -61,7 +61,6 @@ def train(network, patterns):
             else:
                 aux = 0.0
                 for u in range(P):
-                    print(patterns[u])
                     aux += patterns[u][int(i / II)][i % II] *\
                            patterns[u][int(j / II)][j % II]
 
