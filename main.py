@@ -1,36 +1,31 @@
 """Atractive neuronal network."""
-from patterns.patterns import pattern_A, pattern_C, pattern_D, all_patterns
-from neurons import neuron as nr
+from patterns.patterns import all_patterns
+from neurons import network as nt
 import matplotlib.pyplot as plt
-import numpy as np
+import os
 
+try:
+    os.mkdir("results")
+except FileExistsError:
+    pass
 
-NN = np.array([[nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1),
-               nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1)],
-               [nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1),
-               nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1)],
-               [nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1),
-               nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1)],
-               [nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1),
-               nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1)]]
-              )
+NN = nt.network(8, 8)
 
-Patter = nr.pattern_matrix(NN)
+NN.train(all_patterns[4:7])
+NN.config_init_system()
 
-nr.train(NN, all_patterns[4:7])
-nr.config_init_system(NN)
-
-plt.matshow(nr.pattern_matrix(NN), cmap="Set1")
-print("[{:.2f}%]".format(0.0), nr.energy(NN))
-plt.title(nr.energy(NN))
+plt.matshow(NN.S_out, cmap="Set1")
+print("[{:.2f}%]".format(0.0), NN.E)
+plt.title(NN.energy())
 plt.savefig("results/A.pdf")
 
-iterations = 50
+iterations = 10
 
 
 for i in range(iterations):
-    print("[{:.2f}%]".format((i+1)/iterations*100), nr.system_step(NN))
+    NN.system_step()
+    print("[{:.2f}%]".format((i+1)/iterations*100), NN.E)
     plt.close()
-    plt.matshow(nr.pattern_matrix(NN), cmap="Set1")
-    plt.title(nr.energy(NN))
+    plt.matshow(NN.S_out, cmap="Set1")
+    plt.title(NN.energy())
     plt.savefig("results/ite_{}.pdf".format(i))
