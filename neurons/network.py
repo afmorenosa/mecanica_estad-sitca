@@ -6,7 +6,7 @@ import numpy as np
 class network:
     """Neuronal network calss."""
 
-    def __init__(self, m, n):
+    def __init__(self, m, n, f):
         """Network constructor."""
         aux_net = []
         self.m = m
@@ -14,7 +14,7 @@ class network:
         for i in range(self.m):
             aux_net.append([])
             for j in range(self.n):
-                aux_net[i].append(nr.neuron([], [], np.sign, -1))
+                aux_net[i].append(nr.neuron([], [], f, -1))
 
         self.net = np.array(aux_net)
         self.E = 0
