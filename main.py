@@ -9,9 +9,19 @@ try:
 except FileExistsError:
     pass
 
+# try:
+    # os.mkdir("let")
+# except FileExistsError:
+    # pass
+#
+# for i in range(len(all_patterns)):
+    # plt.close()
+    # plt.matshow(all_patterns[i], cmap="Set1")
+    # plt.savefig("let/letra_{}.pdf".format(i))
+
 NN = nt.network(8, 8)
 
-NN.train(all_patterns[4:7])
+NN.train(all_patterns[2:10])
 NN.config_init_system()
 
 plt.matshow(NN.S_out, cmap="Set1")
@@ -23,8 +33,11 @@ iterations = 10
 
 
 for i in range(iterations):
+    matrix = open("results/data_{}.data".format(i), "w")
     NN.system_step()
     print("[{:.2f}%]".format((i+1)/iterations*100), NN.E)
+    matrix.write(str(NN.S_out))
+    matrix.close()
     plt.close()
     plt.matshow(NN.S_out, cmap="Set1")
     plt.title(NN.energy())
