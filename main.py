@@ -1,36 +1,53 @@
 """Atractive neuronal network."""
-from patterns.patterns import pattern_A, pattern_C, pattern_D, all_patterns
-from neurons import neuron as nr
+from patterns.patterns import all_patterns
+from neurons import network as nt
 import matplotlib.pyplot as plt
-import numpy as np
+import os
+
+try:
+    os.mkdir("results")
+except FileExistsError:
+    pass
+
+# try:
+    # os.mkdir("let")
+# except FileExistsError:
+    # pass
+#
+# for i in range(len(all_patterns)):
+    # plt.close()
+    # plt.matshow(all_patterns[i], cmap="Set1")
+    # plt.savefig("let/letra_{}.pdf".format(i))
 
 
-NN = np.array([[nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1),
-               nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1)],
-               [nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1),
-               nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1)],
-               [nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1),
-               nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1)],
-               [nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1),
-               nr.neuron([], [], np.sign, -1), nr.neuron([], [], np.sign, -1)]]
-              )
+def F(x):
+    """Sing function."""
+    if x >= 0:
+        return 1
+    else:
+        return -1
 
-Patter = nr.pattern_matrix(NN)
 
-nr.train(NN, all_patterns[4:7])
-nr.config_init_system(NN)
+NN = nt.network(8, 8, F)
 
-plt.matshow(nr.pattern_matrix(NN), cmap="Set1")
-print("[{:.2f}%]".format(0.0), nr.energy(NN))
-plt.title(nr.energy(NN))
+NN.train(all_patterns[5:20])
+NN.config_init_system()
+
+plt.matshow(NN.S_out, cmap="Set1")
+print("[{:.2f}%]".format(0.0), NN.E)
+plt.title(NN.energy())
 plt.savefig("results/A.pdf")
 
-iterations = 50
+iterations = 10
 
 
 for i in range(iterations):
-    print("[{:.2f}%]".format((i+1)/iterations*100), nr.system_step(NN))
+    # matrix = open("results/data_{}.data".format(i), "w")
+    NN.system_step()
+    print("[{:.2f}%]".format((i+1)/iterations*100), NN.E)
+    # matrix.write(str(NN.S_out))
+    # matrix.close()
     plt.close()
-    plt.matshow(nr.pattern_matrix(NN), cmap="Set1")
-    plt.title(nr.energy(NN))
+    plt.matshow(NN.S_out, cmap="Set1")
+    plt.title(NN.energy())
     plt.savefig("results/ite_{}.pdf".format(i))
