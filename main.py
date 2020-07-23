@@ -30,7 +30,7 @@ def F(x):
 
 NN = nt.network(8, 8, F)
 
-NN.train([all_patterns[2]] * 7 + [all_patterns[3]] * 2 + [all_patterns[4]])
+NN.train(all_patterns[5:20])
 NN.config_init_system()
 
 plt.matshow(NN.S_out, cmap="Set1")
