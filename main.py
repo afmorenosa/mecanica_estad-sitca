@@ -30,24 +30,20 @@ def F(x):
 
 NN = nt.network(8, 8, F)
 
-NN.train(all_patterns[5:20])
-NN.config_init_system()
+alpha = []
+errors = []
+number_test = 500
 
-plt.matshow(NN.S_out, cmap="Set1")
-print("[{:.2f}%]".format(0.0), NN.E)
-plt.title(NN.energy())
-plt.savefig("results/A.pdf")
+for i in range(len(all_patterns)):
+    alpha.append((i+1)/NN.N)
+    print("[{:.2f}]%".format((i+1)/len(all_patterns) * 100))
+    errors.append(NN.get_error(all_patterns[0:i+1], number_test))
 
-iterations = 10
-
-
-for i in range(iterations):
-    # matrix = open("results/data_{}.data".format(i), "w")
-    NN.system_step()
-    print("[{:.2f}%]".format((i+1)/iterations*100), NN.E)
-    # matrix.write(str(NN.S_out))
-    # matrix.close()
-    plt.close()
-    plt.matshow(NN.S_out, cmap="Set1")
-    plt.title(NN.energy())
-    plt.savefig("results/ite_{}.pdf".format(i))
+plt.clf()
+plt.close()
+plt.plot(alpha, errors)
+plt.grid()
+plt.xlabel(r"$\alpha$")
+plt.ylabel(r"$\epsilon$")
+plt.title("Error de red de memoria")
+plt.savefig("Errors.pdf")
