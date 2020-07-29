@@ -127,7 +127,6 @@ class network:
                E[2] != E[3]) and
                ite <= 100):
             # matrix = open("results/data_{}.data".format(i), "w")
-            print(self.E)
             self.system_step()
             E.remove(E[0])
             E.append(self.E)
