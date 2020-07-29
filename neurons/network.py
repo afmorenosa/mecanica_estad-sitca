@@ -64,6 +64,7 @@ class network:
             pattern.append([])
             for j in range(len(patterns[self.test_letter][i])):
                 pattern[i].append(patterns[self.test_letter][i][j])
+                # pattern[i].append(np.random.randint(2)*2 - 1)
 
         for i in range(5):
             i = np.random.randint(len(pattern))
@@ -126,18 +127,26 @@ class network:
                E[2] != E[3]) and
                ite <= 100):
             # matrix = open("results/data_{}.data".format(i), "w")
+            print(self.E)
             self.system_step()
             E.remove(E[0])
             E.append(self.E)
             ite += 1
 
-        for pattern in patterns:
-            if ((np.array(self.S_out) == np.array(pattern)).all() or
-               (np.array(self.S_out) == -np.array(pattern)).all()):
-                return 0
+        print(self.E)
+        # for pattern in patterns:
+            # if ((np.array(self.S_out) == np.array(pattern)).all() or
+               # (np.array(self.S_out) == -np.array(pattern)).all()):
+                # return 0
 
-        # if (patterns[self.test_letter] == self.S_out):
-            # return 0
+        err_pix = 0
+        for i in range(len(patterns[self.test_letter])):
+            for j in range(len(patterns[self.test_letter][i])):
+                if(patterns[self.test_letter][i][j] != self.S_out[i][j]):
+                    err_pix += 1
+
+        if (err_pix/self.N < 0.15):
+            return 0
 
         return 1
 
@@ -153,16 +162,16 @@ class network:
             if i == int(n_test / 2):
                 plt.clf()
                 plt.close()
-                fig, (ax0, ax1, ax2) = plt.subplots(1, 3)
+                fig, (ax0, ax1) = plt.subplots(1, 2)
                 ax0.matshow(self.pattern)
-                ax0.set_title("Patron Inicial,\nE = {}".format(self.E0))
+                ax0.set_title("Patron Inicial,\nE = {:.2f}\n{} patron(es) aprendido(s)".format(self.E0, len(patterns)))
                 ax0.set_axis_off()
                 ax1.matshow(self.S_out)
-                ax1.set_title("Patron Final,\nE = {}".format(self.E))
+                ax1.set_title("Patron Final,\nE = {:.2f}".format(self.E))
                 ax1.set_axis_off()
-                ax2.matshow(patterns[self.test_letter])
-                ax2.set_title("Patron Esperado\n{} patron(es) aprendido(s)".format(len(patterns)))
-                ax2.set_axis_off()
+                # ax2.matshow(patterns[self.test_letter])
+                # ax2.set_title("Patron Esperado\n{} patron(es) aprendido(s)".format(len(patterns)))
+                # ax2.set_axis_off()
                 plt.savefig("results/P_#{}_Patrones_{}".format(int(n_test / 2), len(patterns)))
             print("\t[{:.2f}%] Test con {} patron(es) aprendido(s), errores: {}".format((i+1)/n_test*100, len(patterns), self.mistakes))
 
